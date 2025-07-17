@@ -1,4 +1,6 @@
+// File: /client/src/App.jsx
 import React, { useState } from "react";
+import { motion } from "framer-motion";
 
 export default function App() {
   const [formData, setFormData] = useState({
@@ -14,71 +16,94 @@ export default function App() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Submitting:", formData);
-    // TODO: Add backend POST request or connect with Google Sheets API
+    try {
+      await fetch("https://lyfari-backend.vercel.app/api/submit", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(formData)
+      });
+      window.location.href = "/thank-you";
+    } catch (err) {
+      console.error("Submission failed", err);
+      alert("Something went wrong. Please try again.");
+    }
   };
 
   return (
-    <div style={{ minHeight: "100vh", background: "#000", color: "#fff", padding: "2rem" }}>
-      <header style={{ textAlign: "center", marginBottom: "2rem" }}>
-        <h1 style={{ fontSize: "3rem", color: "#6366f1", fontWeight: "bold" }}>Lyfari</h1>
-        <p style={{ color: "#a5b4fc", fontSize: "1.2rem" }}>Discover Your Emotional Frequency</p>
+    <div className="min-h-screen bg-black text-white p-6">
+      <header className="text-center mb-12">
+        <motion.h1
+          className="text-4xl md:text-6xl font-bold mb-2 text-indigo-400"
+          initial={{ opacity: 0, y: -30 }}
+          animate={{ opacity: 1, y: 0 }}
+        >
+          Lyfari
+        </motion.h1>
+        <p className="text-lg md:text-xl text-indigo-300 italic">
+          In soul and signal, we remember.
+        </p>
       </header>
 
-      <form onSubmit={handleSubmit} style={{
-        maxWidth: "500px", margin: "0 auto", background: "#111", padding: "2rem",
-        borderRadius: "1rem", boxShadow: "0 0 20px rgba(0,0,0,0.5)"
-      }}>
+      <form
+        onSubmit={handleSubmit}
+        className="max-w-xl mx-auto bg-gray-900 text-white p-8 rounded-2xl shadow-xl space-y-6"
+      >
         <div>
-          <label>Name</label>
+          <label className="block mb-1 font-semibold">Name</label>
           <input
             type="text"
             name="name"
             value={formData.name}
             onChange={handleChange}
             required
-            style={{ width: "100%", padding: "0.5rem", margin: "0.5rem 0", background: "#000", color: "#fff", border: "1px solid #444", borderRadius: "0.5rem" }}
+            className="w-full p-2 border border-gray-700 bg-black text-white rounded-lg"
           />
         </div>
 
         <div>
-          <label>Email</label>
+          <label className="block mb-1 font-semibold">Email</label>
           <input
             type="email"
             name="email"
             value={formData.email}
             onChange={handleChange}
             required
-            style={{ width: "100%", padding: "0.5rem", margin: "0.5rem 0", background: "#000", color: "#fff", border: "1px solid #444", borderRadius: "0.5rem" }}
+            className="w-full p-2 border border-gray-700 bg-black text-white rounded-lg"
           />
         </div>
 
         <div>
-          <label>When was the last time you felt deeply seen?</label>
+          <label className="block mb-1 font-semibold">
+            When was the last time you felt deeply seen?
+          </label>
           <textarea
             name="q1"
             value={formData.q1}
             onChange={handleChange}
             required
-            style={{ width: "100%", padding: "0.5rem", margin: "0.5rem 0", background: "#000", color: "#fff", border: "1px solid #444", borderRadius: "0.5rem" }}
+            className="w-full p-2 border border-gray-700 bg-black text-white rounded-lg"
           />
         </div>
 
         <div>
-          <label>What kind of emotional connection do you crave?</label>
+          <label className="block mb-1 font-semibold">
+            What kind of emotional connection do you crave?
+          </label>
           <textarea
             name="q2"
             value={formData.q2}
             onChange={handleChange}
             required
-            style={{ width: "100%", padding: "0.5rem", margin: "0.5rem 0", background: "#000", color: "#fff", border: "1px solid #444", borderRadius: "0.5rem" }}
+            className="w-full p-2 border border-gray-700 bg-black text-white rounded-lg"
           />
         </div>
 
-        <button type="submit" style={{
-          width: "100%", background: "#4f46e5", color: "#fff", padding: "0.8rem", border: "none", borderRadius: "1rem",
-          fontWeight: "bold", cursor: "pointer", marginTop: "1rem"
-        }}>
+        <button
+          type="submit"
+          className="w-full bg-gradient-to-r from-indigo-500 to-purple-600 text-white py-2 rounded-xl font-semibold hover:from-indigo-600 hover:to-purple-700"
+        >
           Reveal My SoulMatch
         </button>
       </form>
